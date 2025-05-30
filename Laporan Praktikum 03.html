@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan Praktikum - 03</title>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .button-group {
+            grid-column: span 2;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .output {
+            margin-top: 25px;
+            background-color: #d4f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Laporan Praktikum - 03</h1>
+    <form id="praktikumForm">
+        <div class="form-group">
+            <label>Masukkan Nama:</label>
+            <input type="text" id="nama">
+        </div>
+        <div class="form-group">
+            <label>Masukkan NIM:</label>
+            <input type="text" id="nim">
+        </div>
+        <div class="form-group">
+            <label>Masukkan Asal Kamu:</label>
+            <input type="text" id="asal">
+        </div>
+        <div class="form-group">
+            <label>Pilih Dosen Favorit:</label>
+            <select id="dosen">
+                <option value="">Pilih salah satu</option>
+                <option value="Pak Agus Mulyanto">Pak Agus Mulyanto</option>
+                <option value="Bu Yuni Roza">Bu Yuni Roza</option>
+                <option value="Bu Yessy Asri">Bu Yessy Asri</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Pilih Tanggal Lahir anda:</label>
+            <input type="date" id="tanggalLahir">
+        </div>
+        <div class="form-group">
+            <label>Tulis Hal favorit Kamu:</label>
+            <input type="text" id="favorit">
+        </div>
+        <div class="form-group">
+            <label>Masukkan Nama Teman Favorit:</label>
+            <input type="text" id="teman">
+        </div>
+        <div class="form-group">
+            <label>Masukkan AI Favorit:</label>
+            <input type="text" id="ai">
+        </div>
+        <div class="form-group button-group">
+            <button type="submit">Kirim</button>
+        </div>
+    </form>
+
+    <div id="output" class="output" style="display: none;"></div>
+</div>
+
+<script>
+    document.getElementById("praktikumForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const nama = document.getElementById("nama").value.trim();
+        const asal = document.getElementById("asal").value.trim();
+        const nim = document.getElementById("nim").value.trim();
+        const dosen = document.getElementById("dosen").value.trim();
+        const tanggal = document.getElementById("tanggalLahir").value.trim();
+        const favorit = document.getElementById("favorit").value.trim();
+        const teman = document.getElementById("teman").value.trim();
+        const ai = document.getElementById("ai").value.trim();
+
+        // Validasi
+        if (!nama || !asal || !nim || !dosen || !tanggal || !favorit || !teman || !ai) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Harap isi semua data terlebih dahulu.'
+            });
+            return;
+        }
+
+        if (isNaN(nim)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'NIM harus berupa angka.'
+            });
+            return;
+        }
+
+        // Konfirmasi pengiriman data
+        Swal.fire({
+            title: 'Yakin ingin mengirim data?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, kirim!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Data berhasil dikirim.'
+                });
+
+                const output = document.getElementById("output");
+                output.style.display = "block";
+                output.innerHTML = `
+                    <strong>Nama Kamu:</strong> ${nama}<br>
+                    <strong>Asal:</strong> ${asal}<br>
+                    <strong>NIM:</strong> ${nim}<br>
+                    <strong>Dosen Favorit:</strong> ${dosen}<br>
+                    <strong>Tanggal Lahir:</strong> ${tanggal}<br>
+                    <strong>Hal Favorit:</strong> ${favorit}<br>
+                    <strong>Teman Favorit:</strong> ${teman}<br>
+                    <strong>AI Favorit:</strong> ${ai}
+                `;
+
+                // Reset form setelah submit
+                document.getElementById("praktikumForm").reset();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
